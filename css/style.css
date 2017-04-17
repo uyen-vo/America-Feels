@@ -40,6 +40,9 @@ ul {
 	border-radius: 50%;
 	background-color: #3CB371;
 }
+.legendbox li div.happy {
+	background-color: #FFFF85;
+}
 .legendbox li div.neutral {
 	background-color: #FD8702;
 }
