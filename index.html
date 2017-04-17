@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>America Feels</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+	<header>
+		<h1><i class = "fa fa-twitter"></i> America Feels </h1>
+		<p> This map shows the how each state feels.</p>
+	</header>
+
+	<section id="main">
+		<section id = "map" class = "map"></section>
+	</section>
+	<section class="legendbox">
+		<ul>
+			<li><div class="happy"></div>Positive tweets</li>
+			<li><div class="neutral"></div>Equal number of positive and negative tweets</li>
+			<li><div class="sad"></div>Negative tweets</li>
+		</ul>
+	</section>
+
+	<input type="button" id="toggle" value="Start"> 
+
+	<script src="js/pubnub.min.js"></script>
+	<script src="js/d3.min.js"></script>	
+	<script src="js/topojson.min.js"></script>
+	<script src="js/twemoji.min.js"></script>
+	<script src="js/main.js"></script>
+
+</body>
