@@ -4,46 +4,6 @@
 	<meta charset="utf-8">
 	<title>America Feels</title>
 	<link rel="stylesheet" href="css/style.css">
-<<<<<<< HEAD
-=======
-	<script src="js/map/raphael.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
-	<script src="js/map/color.jquery.js"></script>
-	<script src="js/map/jquery.usmap.js"></script>
-	<script>
-	$(document).ready(function() {
-	  $('#map').usmap({
-	  	'stateSpecificStyles': {
-	      'AK' : {fill: '#f00'}
-	    },
-	    'stateSpecificHoverStyles': {
-	      'HI' : {fill: '#ff0'}
-	    },
-	    'mouseoverState': {
-	      'HI' : function(event, data) {
-	        //return false;
-	      }
-	    },
-	    
-	    'click' : function(event, data) {
-	      $('#alert')
-	        .text('Click '+data.name+' on map 1')
-	        .stop()
-	        .css('backgroundColor', '#ff0')
-	        .animate({backgroundColor: '#ddd'}, 1000);
-	    }
-	  });
-	  
-	  $('#over-md').click(function(event){
-	    $('#map').usmap('trigger', 'MD', 'mouseover', event);
-	  });
-	  
-	  $('#out-md').click(function(event){
-	    $('#map').usmap('trigger', 'MD', 'mouseout', event);
-	  });
-	});
-	</script>
->>>>>>> 54425051987d3a95cf08c206cd5c7106adc6a557
 </head>
 <body>
 	<header>
