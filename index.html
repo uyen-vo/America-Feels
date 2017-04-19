@@ -4,8 +4,53 @@
 	<meta charset="utf-8">
 	<title>America Feels</title>
 	<link rel="stylesheet" href="css/style.css">
+	<script src="js/map/raphael.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+	<script src="js/map/color.jquery.js"></script>
+	<script src="js/map/jquery.usmap.js"></script>
+	<script>
+	function colorStates() {
+		$("#map").usmap({
+			'stateSpecificStyles': {
+				'TX' : {fill: '#f00'}
+			}
+		});
+	}
+	</script>
+	<script>
+	$(document).ready(function() {
+	  $('#map').usmap({
+	  	'stateSpecificStyles': {
+	      'AK' : {fill: '#f00'}
+	    },
+	    'stateSpecificHoverStyles': {
+	      'HI' : {fill: '#ff0'}
+	    },
+	    'mouseoverState': {
+	      'HI' : function(event, data) {
+	        //return false;
+	      }
+	    },
+	    
+	    'click' : function(event, data) {
+	      $('#alert')
+	        .text('Click '+data.name+' on map 1')
+	        .stop()
+	        .css('backgroundColor', '#ff0')
+	        .animate({backgroundColor: '#ddd'}, 1000);
+	    }
+	  });
+	  
+	  $('#over-md').click(function(event){
+	    $('#map').usmap('trigger', 'MD', 'mouseover', event);
+	  });
+	  
+	  $('#out-md').click(function(event){
+	    $('#map').usmap('trigger', 'MD', 'mouseout', event);
+	  });
+	});
+	</script>
 </head>
-
 <body>
 	<header>
 		<h1><i class = "fa fa-twitter"></i> America Feels </h1>
@@ -13,23 +58,30 @@
 	</header>
 
 	<section id="main">
-		<section id = "map" class = "map"></section>
+		<div id="alert" style="width: 930px;">Click alerts</div>
+		<div id="map" style="width: 930px; height: 630px;"></div>
+		<!--<button id="over-md">mouseover MD</button> <button id="out-md">mouseout MD</button> -->
+		<button id="demo" onclick="colorStates()">Click me</button>
+		<!--<section id = "map" class = "map"></section> -->
 	</section>
+
 	<section class="legendbox">
 		<ul>
 			<li><div class="happy"></div>Positive tweets</li>
 			<li><div class="neutral"></div>Equal number of positive and negative tweets</li>
 			<li><div class="sad"></div>Negative tweets</li>
 		</ul>
-		<center><img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;"></center>
+		<li><colorKey><img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;"></colorKey></li>
 	</section>
 
-	<!--<input type="button" id="toggle" value="Start">--> 
+
+	<!--<input type="button" id="toggle" value="Start">
 
 	<script src="js/pubnub.min.js"></script>
 	<script src="js/d3.min.js"></script>	
 	<script src="js/topojson.min.js"></script>
 	<script src="js/twemoji.min.js"></script>
 	<script src="js/main.js"></script>
+	-->
 
 </body>

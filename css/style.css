@@ -11,6 +11,28 @@ header {
 	margin: 0 100px 4em 0;
 }
 
+c1 {
+	color: #FFFF85;
+}
+c2 {
+	color: #FFCE00;
+}
+c3 {
+	color: #FEA500;
+}
+c4 {
+	color: #FD8702;
+}
+c5 {
+	color: #FE6100;
+}
+c6 {
+	color: #FF3A00;
+}
+c7 {
+	color: #FF0202;
+}
+
 h1 {
 	font-size: 3.5em;
 }
@@ -39,6 +61,9 @@ ul {
 	margin-right: 5px;
 	border-radius: 50%;
 	background-color: #3CB371;
+}
+.legendbox li colorKey {
+	margin-left: 4em;
 }
 .legendbox li div.happy {
 	background-color: #FFFF85;
