@@ -4,52 +4,6 @@
 	<meta charset="utf-8">
 	<title>America Feels</title>
 	<link rel="stylesheet" href="css/style.css">
-	<script src="js/map/raphael.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
-	<script src="js/map/color.jquery.js"></script>
-	<script src="js/map/jquery.usmap.js"></script>
-	<script>
-	function colorStates() {
-		$("#map").usmap({
-			'stateSpecificStyles': {
-				'TX' : {fill: '#f00'}
-			}
-		});
-	}
-	</script>
-	<script>
-	$(document).ready(function() {
-	  $('#map').usmap({
-	  	'stateSpecificStyles': {
-	      'AK' : {fill: '#f00'}
-	    },
-	    'stateSpecificHoverStyles': {
-	      'HI' : {fill: '#ff0'}
-	    },
-	    'mouseoverState': {
-	      'HI' : function(event, data) {
-	        //return false;
-	      }
-	    },
-	    
-	    'click' : function(event, data) {
-	      $('#alert')
-	        .text('Click '+data.name+' on map 1')
-	        .stop()
-	        .css('backgroundColor', '#ff0')
-	        .animate({backgroundColor: '#ddd'}, 1000);
-	    }
-	  });
-	  
-	  $('#over-md').click(function(event){
-	    $('#map').usmap('trigger', 'MD', 'mouseover', event);
-	  });
-	  
-	  $('#out-md').click(function(event){
-	    $('#map').usmap('trigger', 'MD', 'mouseout', event);
-	  });
-	});
-	</script>
 </head>
 <body>
 	<header>
@@ -57,12 +11,9 @@
 		<p> This map shows the how each state feels.</p>
 	</header>
 
-	<section id="main">
-		<div id="alert" style="width: 930px;">Click alerts</div>
-		<div id="map" style="width: 930px; height: 630px;"></div>
+	<section id="main">>
 		<!--<button id="over-md">mouseover MD</button> <button id="out-md">mouseout MD</button> -->
-		<button id="demo" onclick="colorStates()">Click me</button>
-		<!--<section id = "map" class = "map"></section> -->
+		<section id = "map" class = "map"></section>
 	</section>
 
 	<section class="legendbox">
@@ -75,13 +26,12 @@
 	</section>
 
 
-	<!--<input type="button" id="toggle" value="Start">
+	<input type="button" id="toggle" value="Start">
 
 	<script src="js/pubnub.min.js"></script>
 	<script src="js/d3.min.js"></script>	
 	<script src="js/topojson.min.js"></script>
 	<script src="js/twemoji.min.js"></script>
 	<script src="js/main.js"></script>
-	-->
 
 </body>
