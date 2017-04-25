@@ -1,36 +1,99 @@
-<!doctype html>
-<html lang="en">
-<head>
+<!DOCTYPE html>
+	<head>
 	<meta charset="utf-8">
 	<title>America Feels</title>
 	<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-	<header>
-		<h1><i class = "fa fa-twitter"></i> America Feels </h1>
-		<p> This map shows the how each state feels.</p>
-	</header>
+    </head>
+    <body>
+        <section>
+            <h1><i class = "fa fa-twitter"></i> America Feels </h1>
+            <p> This map shows the how each state feels.</p>
+            <!--These scripts generate the US map as well as coloring functions-->
+            <script src="https://d3js.org/d3.v3.min.js"></script>
+            <script src="https://d3js.org/topojson.v2.min.js"></script>
+            <script src="function.js"></script>
+            <script>
+            //Width and height
+            var width = 960;
+            var height = 600;
 
-	<section id="main">
-		<section id = "map" class = "map"></section>
-	</section>
+            //Map Projection
+            var projection = d3.geo.albersUsa()
+                .translate([width/2, height/2])
+                .scale([1000]);
 
-	<section class="legendbox">
-		<ul>
-			<li><div class="happy"></div>Positive tweets</li>
-			<li><div class="neutral"></div>Equal number of positive and negative tweets</li>
-			<li><div class="sad"></div>Negative tweets</li>
-		</ul>
-		<li><colorKey><img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;"></colorKey></li>
-	</section>
+            //Path Generator
+            var path = d3.geo.path()
+                .projection(projection);
+
+            var length = 100;
+            var color = d3.scale.linear().domain([1,length])
+                .interpolate(d3.interpolateHcl)
+                .range([d3.rgb("#FFF900"), d3.rgb('#FC0300')]);
+
+            var svg = d3.select("body")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+                d3.json("JSON/us-states.json", function(json) {
+                    svg.selectAll("path")
+                    .data(json.features)
+                    .enter()
+                    .append("path")
+                    .attr("d", path)
+                    .style("fill", function(d) {
+                        //Get data value
+                        var value = d.properties.value;
+
+                        if (value) {
+                            //If value exists…
+                            return "#0666a5";
+                        } else {
+                            //If value is undefined…
+                            return "#ccc";
+                        }
+                    });
+                });
+            function changeColor(state, value) {
+                var condition;
+                condition = color(value);
+                console.log(condition);
+                svg.selectAll("path")
+                    .style("fill", function(d){
+                        //console.log(d.proprties.name.toString());
+                        var stateName = d.properties["name"];
+                        console.log(state);
+                        if(stateName === state) {
+                            return condition;
+                        }
+                        else {
+                            return "#06666a5";
+                        }
+                    });
+                }
+            function getRandomArbitrary(min, max) {
+                return Math.floor(Math.random() * (max - min)) + min;
+            }
+            </script>
+        </section>
+        <section class="legendbox">
+            <ul>
+                <li><div class="happy"></div>Positive tweets</li>
+                <li><div class="neutral"></div>Equal number of positive and negative tweets</li>
+                <li><div class="sad"></div>Negative tweets</li>
+            </ul>
+            <ul>
+                <img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;">
+            </ul>
+        </section>
+        <section>
+            <input type="button" onclick="changeColor('Texas', 10)" value="ChangeColor('Texas', 10)">
+            <input type="button" onclick="changeColor('Texas', 40)" value="ChangeColor('Texas', 40)">
+            <input type="button" onclick="changeColor('Texas', 100)" value="ChangeColor('Texas', 100)">
+            <input type="button" onclick="changeColor('Texas', getRandomArbitrary(0,100))" value="ChangeColor('Texas', Random)">
+        </section>
+    </body>
+</html>
 
 
-	<input type="button" id="toggle" value="Start">
-
-	<script src="js/pubnub.min.js"></script>
-	<script src="js/d3.min.js"></script>	
-	<script src="js/topojson.min.js"></script>
-	<script src="js/twemoji.min.js"></script>
-	<script src="js/main.js"></script>
-
-</body>
