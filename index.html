@@ -29,7 +29,7 @@
             var length = 100;
             var color = d3.scale.linear().domain([1,length])
                 .interpolate(d3.interpolateHcl)
-                .range([d3.rgb("#FFF900"), d3.rgb('#FC0300')]);
+                .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
 
             var svg = d3.select("body")
                 .append("svg")
@@ -75,6 +75,42 @@
             function getRandomArbitrary(min, max) {
                 return Math.floor(Math.random() * (max - min)) + min;
             }
+            var requestHolder;
+            function analyzeTextData(state, tweet) {
+                var data = generateJSON(tweet);
+                //console.log(data);
+                var request = new XMLHttpRequest();
+                request.open('POST', 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment');
+                request.setRequestHeader('Ocp-Apim-Subscription-Key', 'fd98ecfa17ca4b439fcf66166864b049');
+                request.setRequestHeader('Content-Type', 'application/json');
+                request.setRequestHeader('Accept', 'application/json');
+                request.send(data);
+                request.onreadystatechange = function () {
+                    if (request.readyState == XMLHttpRequest.DONE) {
+                        var r1 = request.responseText;
+                var results = JSON.parse(r1);
+                        console.log(results);
+                        var score = results["documents"][0]["score"];
+                        var scoreValue = score*100;
+                        console.log(scoreValue);
+                        changeColor(state, scoreValue);
+                    }
+                }
+            }
+            function generateJSON(tweet) {
+                var jsonObject =
+                    {
+                        "documents": [
+                            {
+                                "language": "en",
+                                "id": "1",
+                                "text": tweet
+                            }
+                        ]
+                    };
+                var json = JSON.stringify(jsonObject);
+                return json;
+            }
             </script>
         </section>
         <section class="legendbox">
@@ -88,10 +124,12 @@
             </ul>
         </section>
         <section>
-            <input type="button" onclick="changeColor('Texas', 10)" value="ChangeColor('Texas', 10)">
-            <input type="button" onclick="changeColor('Texas', 40)" value="ChangeColor('Texas', 40)">
-            <input type="button" onclick="changeColor('Texas', 100)" value="ChangeColor('Texas', 100)">
-            <input type="button" onclick="changeColor('Texas', getRandomArbitrary(0,100))" value="ChangeColor('Texas', Random)">
+            <!--<input type="button" onclick="analyzeTextData('Texas', '')" value="analyzeTextData('Texas', '')">-->
+            <input type="button" onclick="analyzeTextData('Florida', 'I aboslutely love the weather around this time of the year!!!')" value="analyzeTextData('Florida', 'I aboslutely love the weather around this time of the year!!!')">
+            <input type="button" onclick="analyzeTextData('New Mexico', 'You have got to be shiiting me. I have to pay 40% of my money as tax??')" value="analyzeTextData('New Mexico', 'You have got to be shiiting me. I have to pay 40% of my money as tax??')">
+            <input type="button" onclick="analyzeTextData('Georgia', 'Meh, another win for the patriots....')" value="analyzeTextData('Georgia', 'Meh, another win for the patriots....')">
+            <input type="button" onclick="analyzeTextData('California', 'Legalize Weed Man! God gave us plants lets smoke them.')" value="analyzeTextData('California', 'Legalize Weed Man! God gave us plants lets smoke them.')">
+            <input type="button" onclick="analyzeTextData('Texas', 'Hell yeah! The rockets are aboslutely amazing. Best point guard I have ever seen!')" value="analyzeTextData('Texas', 'Hell yeah! The rockets are aboslutely amazing. Best point guard I have ever seen!')">
         </section>
     </body>
 </html>
