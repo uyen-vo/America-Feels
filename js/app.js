@@ -17,8 +17,7 @@ function initialize(){
 	    .interpolate(d3.interpolateHcl)
 	    .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
 
-	var svg = d3.select("body")
-	    .append("svg")
+	var svg = d3.select("#map").append("svg")
 	    .attr("width", width)
 	    .attr("height", height);
 
@@ -87,7 +86,7 @@ function initialize(){
 	        }
 	    }
 	}
-	
+
 	function generateJSON(tweet) {
 	    var jsonObject =
 	        {
