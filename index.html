@@ -42,18 +42,19 @@
                     .enter()
                     .append("path")
                     .attr("d", path)
-                    .style("fill", function(d) {
+                    .style("fill", "#0666a5")
+                        // function(d) {
                         //Get data value
-                        var value = d.properties.value;
+                        // var value = d.properties.value;
 
-                        if (value) {
-                            //If value exists…
-                            return "#0666a5";
-                        } else {
-                            //If value is undefined…
-                            return "#ccc";
-                        }
-                    });
+                        // if (value) {
+                        //     //If value exists…
+                        //     return "#0666a5";
+                        // } else {
+                        //     //If value is undefined…
+                        //     return "#ccc";
+                        // }
+                    // });
                 });
             function changeColor(state, value) {
                 var condition;
@@ -62,7 +63,8 @@
                 svg.selectAll("path")
                     .style("fill", function(d){
                         //console.log(d.proprties.name.toString());
-                        var stateName = d.properties["name"];
+                        // var stateName = d.properties["name"];
+                        var stateName = d.properties.STATE_ABBR;
                         console.log(state);
                         if(stateName === state) {
                             return condition;
@@ -125,11 +127,11 @@
         </section>
         <section>
             <!--<input type="button" onclick="analyzeTextData('Texas', '')" value="analyzeTextData('Texas', '')">-->
-            <input type="button" onclick="analyzeTextData('Florida', 'I aboslutely love the weather around this time of the year!!!')" value="analyzeTextData('Florida', 'I aboslutely love the weather around this time of the year!!!')">
-            <input type="button" onclick="analyzeTextData('New Mexico', 'You have got to be shiiting me. I have to pay 40% of my money as tax??')" value="analyzeTextData('New Mexico', 'You have got to be shiiting me. I have to pay 40% of my money as tax??')">
-            <input type="button" onclick="analyzeTextData('Georgia', 'Meh, another win for the patriots....')" value="analyzeTextData('Georgia', 'Meh, another win for the patriots....')">
-            <input type="button" onclick="analyzeTextData('California', 'Legalize Weed Man! God gave us plants lets smoke them.')" value="analyzeTextData('California', 'Legalize Weed Man! God gave us plants lets smoke them.')">
-            <input type="button" onclick="analyzeTextData('Texas', 'Hell yeah! The rockets are aboslutely amazing. Best point guard I have ever seen!')" value="analyzeTextData('Texas', 'Hell yeah! The rockets are aboslutely amazing. Best point guard I have ever seen!')">
+            <input type="button" onclick="analyzeTextData('FL', 'I aboslutely love the weather around this time of the year!!!')" value="analyzeTextData('Florida', 'I aboslutely love the weather around this time of the year!!!')">
+            <input type="button" onclick="analyzeTextData('NM', 'You have got to be shiiting me. I have to pay 40% of my money as tax??')" value="analyzeTextData('New Mexico', 'You have got to be shiiting me. I have to pay 40% of my money as tax??')">
+            <input type="button" onclick="analyzeTextData('GA', 'Meh, another win for the patriots....')" value="analyzeTextData('Georgia', 'Meh, another win for the patriots....')">
+            <input type="button" onclick="analyzeTextData('CA', 'Legalize Weed Man! God gave us plants lets smoke them.')" value="analyzeTextData('California', 'Legalize Weed Man! God gave us plants lets smoke them.')">
+            <input type="button" onclick="analyzeTextData('TX', 'Hell yeah! The rockets are aboslutely amazing. Best point guard I have ever seen!')" value="analyzeTextData('Texas', 'Hell yeah! The rockets are aboslutely amazing. Best point guard I have ever seen!')">
         </section>
     </body>
 </html>
