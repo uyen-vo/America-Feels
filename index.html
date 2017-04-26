@@ -42,19 +42,18 @@
                     .enter()
                     .append("path")
                     .attr("d", path)
-                    .style("fill", "#0666a5")
-                        // function(d) {
-                        //Get data value
-                        // var value = d.properties.value;
+                    .style("fill", function(d) {
+                        // Get data value
+                        var value = d.properties.value;
 
-                        // if (value) {
-                        //     //If value exists…
-                        //     return "#0666a5";
-                        // } else {
-                        //     //If value is undefined…
-                        //     return "#ccc";
-                        // }
-                    // });
+                        if (value) {
+                            //If value exists…
+                            return "#0666a5";
+                        } else {
+                            //If value is undefined…
+                            return "#ccc";
+                        }
+                    });
                 });
             function changeColor(state, value) {
                 var condition;
