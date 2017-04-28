@@ -12,6 +12,7 @@ header {
 	text-align: center;
 }
 
+
 c1 {
 	color: #FFFF85;
 }
@@ -107,8 +108,10 @@ ul {
 }
 
 .main button{
-	background-color:white;
-    border: 1px solid black;
+	border: 0;
+	background: none;
+	box-shadow:none;
+	border-radius: 0px;
     color: black;
     padding:5px 15px;
     text-align: center;
@@ -117,18 +120,28 @@ ul {
     font-size: 20px;
     margin: 4px 2px;
     cursor: pointer;
-    -webkit-transition-duration: 0.2s;
-    transition-duration: 0.2s;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
 }
 
 .main button:hover {
 	background-color: #00aced;
 	color:white;
-	border:1px solid #00aced;
+}
+
+
+.main button:hover > .fa-search{
+	color:white;
 }
 
 #select{
 	margin-bottom: 50px;
+	text-align:center;
+}
+
+.s{
+	width:40%;
+	margin:0 auto;
 }
 
 /*Map*/
@@ -160,4 +173,12 @@ ul {
 
 .fa-twitter {
 	color: #55acee;
+}
+
+.fa-search:before{
+	content:"\f002";
+}
+
+.fa-search{
+	color:black;
 }

@@ -22,6 +22,7 @@
 </head>
 
 <body>
+<div id = "wrapper">
     <header>
         <h1><i class = "fa fa-twitter"></i> America Feels</h1>
         <p>Enter a topic to know Twitter's opinions about it.</p>
@@ -30,7 +31,7 @@
     <section class="main">
         <div class="s">
             <input type="text" name="search" id="srch"/>
-            <button onclick="drawMap()">Search</button> 
+            <button onclick="drawMap()"><i class="fa fa-search" aria-hidden="true"></i></button> 
             <!--<button onclick="randomColoring('TX','Hidd')">Test</button> -->
         </div>
     </section>
@@ -48,10 +49,12 @@
                     return false;
                 }
 
+                document.getElementById("select").innerHTML = "You have searched for the opinion on: <strong>" + input + ".</strong>";
+
                 if(drawOnce!=0){ return false; }
 
                 drawOnce = 1;
-                document.getElementById("select").innerHTML = "You have searched for the opinion on: " + input + ".";
+                
                twitterQuery(input);
 
                 var width = 960;
@@ -198,6 +201,8 @@
             function twitterQuery(search){
 
             }
+
+
         </script>
     </section>
 
@@ -211,6 +216,8 @@
         <img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;">
        
     </section>
+
+</div>
 </body>
 
 
