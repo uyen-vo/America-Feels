@@ -2,74 +2,103 @@
 <html lang="en">
 <meta charset="UTF-8">
 <head>
-	<meta charset="utf-8">
-	<title>America Feels</title>
-	
-	<!-- Generic -->
-	<link rel="stylesheet" href="css/style.css">
-	<script src="../socket.io/socket.io.js"></script>
-	
-	<!-- JQuery -->
-	<script src="/libs/jquery-1.10.1.js"></script>
-	
-	<!-- Generic server specific functions -->
-	<script src="/js/FMEServer.js" type="text/javascript"></script>
+    <meta charset="utf-8">
+    <title>America Feels</title>
+    
+    <!-- Generic -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="../socket.io/socket.io.js"></script>
+    
+    <!-- JQuery -->
+    <script src="/libs/jquery-1.10.1.js"></script>
+    
+    <!-- Generic server specific functions -->
+    <script src="/js/FMEServer.js" type="text/javascript"></script>
 
-	<!--These scripts generate the US map as well as coloring functions-->
-	<script src="https://d3js.org/d3.v3.min.js"></script>
+    <!--These scripts generate the US map as well as coloring functions-->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
     <script src="js/function.js"></script>
 </head>
 
 <body>
-	<header>
-        <h1><i class = "fa fa-twitter"></i> America Feels </h1>
-        <p> This map shows the how each state feels.</p>
+    <header>
+        <h1><i class = "fa fa-twitter"></i> America Feels</h1>
+        <p>Enter a topic to know Twitter's opinions about it.</p>
     </header>
+
+    <section class="main">
+        <div class="s">
+            <input type="text" name="search" id="srch"/>
+            <button onclick="drawMap()">Search</button> 
+            <!--<button onclick="randomColoring('TX','Hidd')">Test</button> -->
+        </div>
+    </section>
+
     <section>
         <script>
+            var drawOnce = 0;
+
             //Width and height
-            var width = 960;
-            var height = 600;
+            function drawMap(){
+                var input = document.getElementById('srch').value;
 
-            //Map Projection
-            var projection = d3.geo.albersUsa()
-                .translate([width/2, height/2])
-                .scale([1000]);
+                if(input == null || input == ""){
+                    alert("Please enter in a query.");
+                    return false;
+                }
 
-            //Path Generator
-            var path = d3.geo.path()
-                .projection(projection);
+                if(drawOnce!=0){ return false; }
 
-            var length = 100;
-            var color = d3.scale.linear().domain([1,length])
-                .interpolate(d3.interpolateHcl)
-                .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
+                drawOnce = 1;
+                document.getElementById("select").innerHTML = "You have searched for the opinion on: " + input + ".";
+               twitterQuery(input);
 
-            var svg = d3.select("body")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height);
+                var width = 960;
+                var height = 600;
 
-                d3.json("json/us-states.json", function(json) {
-                    svg.selectAll("path")
-                    .data(json.features)
-                    .enter()
-                    .append("path")
-                    .attr("d", path)
-                    .style("fill", function(d) {
-                        // Get data value
-                        var value = d.properties.value;
+                //Map Projection
+                var projection = d3.geo.albersUsa()
+                    .translate([width/2, height/2])
+                    .scale([1000]);
 
-                        if (value) {
-                            //If value exists…
-                            return "#0666a5";
-                        } else {
-                            //If value is undefined…
-                            return "#ccc";
-                        }
+                //Path Generator
+                var path = d3.geo.path()
+                    .projection(projection);
+
+                var length = 100;
+                var color = d3.scale.linear().domain([1,length])
+                    .interpolate(d3.interpolateHcl)
+                    .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
+
+                var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+                    d3.json("json/us-states.json", function(json) {
+                        svg.selectAll("path")
+                        .data(json.features)
+                        .enter()
+                        .append("path")
+                        .attr("d", path)
+                        .style("fill", function(d) {
+                            // Get data value
+                            var value = d.properties.value;
+
+                            if (value) {
+                                //If value exists…
+                                return "#0666a5";
+                            } else {
+                                //If value is undefined…
+                                return "#ccc";
+                            }
+                        });
                     });
-                });
+
+                    document.getElementById("legendbox").style.display = "inline";
+            }
+
             function changeColor(state, value) {
                 var condition;
                 condition = color(value);
@@ -79,7 +108,7 @@
                         //console.log(d.proprties.name.toString());
                         // var stateName = d.properties["name"];
                         var stateName = d.properties["STATE_ABBR"];
-                        console.log(state);
+                        // console.log(state);
                         if(stateName === state) {
                             return condition;
                         }
@@ -88,9 +117,11 @@
                         }
                     });
             }
+
             function getRandomArbitrary(min, max) {
                 return Math.floor(Math.random() * (max - min)) + min;
             }
+
             var requestHolder;
             function analyzeTextData(state, tweet) {
                 var data = generateJSON(tweet);
@@ -105,7 +136,7 @@
                     if (request.readyState == XMLHttpRequest.DONE) {
                         var r1 = request.responseText;
                 var results = JSON.parse(r1);
-                        console.log(results);
+                        // console.log(results);
                         var score = results["documents"][0]["score"];
                         var scoreValue = score*100;
                         console.log(scoreValue);
@@ -127,36 +158,58 @@
                 var json = JSON.stringify(jsonObject);
                 return json;
             }
+
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++ ) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
+            function randomColoring(state, tweet){
+                var scoreValue = getRandomArbitrary(0,100);
+                changeColor(state, scoreValue);
+            }
+
             if(io !== undefined) {
-    			// Storage for WebSocket connections
-    			var socket = io.connect('/');
+                // Storage for WebSocket connections
+                var socket = io.connect('/');
 
-    			// This listens on the "twitter-steam" channel and data is 
-    			// received everytime a new tweet is receieved.
-    			socket.on('twitter-stream', function (data) {
-    				// analyzeTextData(data.state,data.tweet);
-    			});
+                // This listens on the "twitter-steam" channel and data is 
+                // received everytime a new tweet is receieved.
+                socket.on('twitter-stream', function (data) {
+                    // analyzeTextData(data.state,data.tweet);
+                    
+                    randomColoring(data.state,data.tweet);
+                });
 
-			    // Listens for a success response from the server to 
-			    // say the connection was successful.
-			    socket.on("connected", function(r) {
+                // Listens for a success response from the server to 
+                // say the connection was successful.
+                socket.on("connected", function(r) {
 
-			      //Now that we are connected to the server let's tell 
-			      //the server we are ready to start receiving tweets.
-			      socket.emit("start tweets");
-			    });
-			}
+                  //Now that we are connected to the server let's tell 
+                  //the server we are ready to start receiving tweets.
+                  socket.emit("start tweets");
+                });
+            }
+
+            function twitterQuery(search){
+
+            }
         </script>
     </section>
-    <section class="legendbox">
+
+    <section id="legendbox">
+        <p id="select"></p>
         <ul>
             <li><div class="happy"></div>Positive tweets</li>
             <li><div class="neutral"></div>Equal number of positive and negative tweets</li>
             <li><div class="sad"></div>Negative tweets</li>
         </ul>
-        <ul>
-            <img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;">
-        </ul>
+        <img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;">
+       
     </section>
 </body>
 

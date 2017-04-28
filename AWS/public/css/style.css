@@ -8,7 +8,8 @@ body {
 }
 
 header {
-	margin: 0 100px 4em 0;
+	margin: 0 100px 70px 0;
+	text-align: center;
 }
 
 c1 {
@@ -41,20 +42,21 @@ h1 {
 	margin: 0;
 	text-rendering: optimizeLegibility;
 	font-weight: normal;
+	margin-bottom:10px;
 }
 
 /* Legend */
 ul {
 	padding: 0;
 }
-.legendbox li {
+#legendbox li {
 	list-style-type: none;
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 0.9em;
 	margin-right: 1.5em;
 }
-.legendbox li div {
+#legendbox li div {
 	width: 14px;
 	height: 14px;
 	display: inline-block;
@@ -62,18 +64,71 @@ ul {
 	border-radius: 50%;
 	background-color: #3CB371;
 }
-.legendbox li colorKey {
+#legendbox li colorKey {
 	margin-left: 4em;
 }
-.legendbox li div.happy {
+#legendbox li div.happy {
 	background-color: #FFFF85;
 }
-.legendbox li div.neutral {
+#legendbox li div.neutral {
 	background-color: #FD8702;
 }
 
-.legendbox li div.sad {
+#legendbox li div.sad {
 	background-color: #FF0202;
+}
+
+#legendbox{
+	display:none;
+}
+
+#legendbox img{
+	display:block;
+	margin: 0 auto;
+}
+#legendbox ul{
+	text-align: center;
+}
+
+/*Search*/
+
+.main{
+	text-align:center;
+	margin-bottom:50px;
+}
+
+ input[type="text"] {
+    display: inline-block;
+    font-size:25px;
+    border:none;
+    border-bottom: 1px solid black;
+    size:20;
+    margin-right:40px;
+}
+
+.main button{
+	background-color:white;
+    border: 1px solid black;
+    color: black;
+    padding:5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+}
+
+.main button:hover {
+	background-color: #00aced;
+	color:white;
+	border:1px solid #00aced;
+}
+
+#select{
+	margin-bottom: 50px;
 }
 
 /*Map*/
