@@ -24,11 +24,10 @@ app.use(express.static(__dirname + '/public'));
 //Create web sockets connection.
 io.sockets.on('connection', function (socket) {
 
-  socket.on("start tweets", function() {
-
+  socket.on("start tweets", function(input) {
     if(stream === null) {
       //Connect to twitter stream passing in filter for entire united states.
-      twit.stream('statuses/filter', {'locations':'-124.85, 24.39,-66.88,49.38'}, function(stream) {
+      twit.stream('statuses/filter', {'locations':'-124.85, 24.39,-66.88,49.38', 'track': input}, function(stream) {
           stream.on('data', function(data) {
               // Does the JSON result have coordinates
               if (data.coordinates){
@@ -52,6 +51,7 @@ io.sockets.on('connection', function (socket) {
                   var d = date.toDateString().substr(4);
                   var t = (date.getHours() > 12) ? date.getHours()-12 + ':' + date.getMinutes() + ' PM' : date.getHours() + ':' + date.getMinutes() +' AM;';
                   outputPoint.timestamp = t + ' - ' + d;
+                  // outputPoint.inputsocket = input;
 
                   socket.broadcast.emit("twitter-stream", outputPoint);
 

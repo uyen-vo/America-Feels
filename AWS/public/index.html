@@ -53,10 +53,8 @@
                 document.getElementById("select").innerHTML = "You have searched for the opinion on: <strong>" + input + ".</strong>";
 
                 if(drawOnce!=0){ return false; }
-
                 drawOnce = 1;
-                
-               twitterQuery(input);
+                twitterQuery(input);
 
                 var width = 960;
                 var height = 600;
@@ -177,30 +175,28 @@
                 changeColor(state, scoreValue);
             }
 
-            if(io !== undefined) {
-                // Storage for WebSocket connections
-                var socket = io.connect('/');
-
-                // This listens on the "twitter-steam" channel and data is 
-                // received everytime a new tweet is receieved.
-                socket.on('twitter-stream', function (data) {
-                    // analyzeTextData(data.state,data.tweet);
-                    
-                    randomColoring(data.state,data.tweet);
-                });
-
-                // Listens for a success response from the server to 
-                // say the connection was successful.
-                socket.on("connected", function(r) {
-
-                  //Now that we are connected to the server let's tell 
-                  //the server we are ready to start receiving tweets.
-                  socket.emit("start tweets");
-                });
-            }
-
             function twitterQuery(search){
+                if(io !== undefined) {
+                    // Storage for WebSocket connections
+                    var socket = io.connect('/');
 
+                    // This listens on the "twitter-steam" channel and data is 
+                    // received everytime a new tweet is receieved.
+                    socket.on('twitter-stream', function (data) {
+                        // analyzeTextData(data.state,data.tweet);
+                        console.log(data.tweet);
+                        randomColoring(data.state,data.tweet);
+                    });
+
+                    // Listens for a success response from the server to 
+                    // say the connection was successful.
+                    socket.on("connected", function(r) {
+
+                      //Now that we are connected to the server let's tell 
+                      //the server we are ready to start receiving tweets.
+                      socket.emit("start tweets", search);
+                    });
+                }
             }
 
 
