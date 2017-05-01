@@ -184,7 +184,10 @@
                     // received everytime a new tweet is receieved.
                     socket.on('twitter-stream', function (data) {
                         // analyzeTextData(data.state,data.tweet);
+                        // console.log(data);
                         console.log(data.tweet);
+                        console.log(data.inputsocket);
+                        console.log(data.state);
                         randomColoring(data.state,data.tweet);
                     });
 

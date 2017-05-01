@@ -22,12 +22,18 @@ server.listen(process.env.PORT || 8081);
 app.use(express.static(__dirname + '/public'));
 
 //Create web sockets connection.
+// var currentstream = 0;
 io.sockets.on('connection', function (socket) {
 
   socket.on("start tweets", function(input) {
     if(stream === null) {
       //Connect to twitter stream passing in filter for entire united states.
-      twit.stream('statuses/filter', {'locations':'-124.85, 24.39,-66.88,49.38', 'track': input}, function(stream) {
+      // twit.stream('statuses/filter', {'locations':'-124.85, 24.39,-66.88,49.38', 'track':'#apple'}, function(stream) {
+        // twit.stream('statuses/filter', {'q':'#apple'}, function(stream) {
+        twit.stream('statuses/filter', {track: input}, function(stream) {
+          
+          // if(currentstream)
+            // currentstream.destroy();
           stream.on('data', function(data) {
               // Does the JSON result have coordinates
               if (data.coordinates){
@@ -51,7 +57,7 @@ io.sockets.on('connection', function (socket) {
                   var d = date.toDateString().substr(4);
                   var t = (date.getHours() > 12) ? date.getHours()-12 + ':' + date.getMinutes() + ' PM' : date.getHours() + ':' + date.getMinutes() +' AM;';
                   outputPoint.timestamp = t + ' - ' + d;
-                  // outputPoint.inputsocket = input;
+                  outputPoint.inputsocket = input;
 
                   socket.broadcast.emit("twitter-stream", outputPoint);
 
@@ -107,6 +113,7 @@ io.sockets.on('connection', function (socket) {
               stream.on('disconnect', function(disconnectMessage) {
                 return console.log(disconnectMessage);
               });
+              // currentstream = stream;
           });
       });
     }
