@@ -22,7 +22,7 @@ server.listen(process.env.PORT || 8081);
 app.use(express.static(__dirname + '/public'));
 
 //Create web sockets connection.
-// var currentstream = 0;
+var currentstream = 0;
 io.sockets.on('connection', function (socket) {
 
   socket.on("start tweets", function(input) {
@@ -32,8 +32,8 @@ io.sockets.on('connection', function (socket) {
         // twit.stream('statuses/filter', {'q':'#apple'}, function(stream) {
         twit.stream('statuses/filter', {track: input}, function(stream) {
           
-          // if(currentstream)
-            // currentstream.destroy();
+          if(currentstream)
+            currentstream.destroy();
           stream.on('data', function(data) {
               // Does the JSON result have coordinates
               if (data.coordinates){
@@ -113,7 +113,7 @@ io.sockets.on('connection', function (socket) {
               stream.on('disconnect', function(disconnectMessage) {
                 return console.log(disconnectMessage);
               });
-              // currentstream = stream;
+              currentstream = stream;
           });
       });
     }

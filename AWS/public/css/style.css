@@ -79,14 +79,11 @@ ul {
 	background-color: #FF0202;
 }
 
-#legendbox{
-	display:none;
-}
-
 #legendbox img{
 	display:block;
 	margin: 0 auto;
 }
+
 #legendbox ul{
 	text-align: center;
 }
@@ -150,6 +147,15 @@ ul {
 	stroke-width: 1px;
 }
 
+#map{
+	width: 100%;
+	text-align: center;
+}
+
+#map, #legendbox, #select{
+	opacity: 0;
+	transition: opacity 2s;
+}
 /* Font Awesome */
 
 @font-face {
@@ -159,6 +165,7 @@ ul {
   font-weight: normal;
   font-style: normal;
 }
+
 .fa {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
