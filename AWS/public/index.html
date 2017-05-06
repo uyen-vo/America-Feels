@@ -24,17 +24,20 @@
 <body>
 <div id = "wrapper">
     <header>
-        <h1><i class = "fa fa-twitter"></i> America Feels</h1>
-        <p>Enter a topic to know Twitter's opinions about it.</p>
-    </header>
-
-    <section class="main">
-        <div class="s">
-            <input type="text" name="search" id="srch"/>
-            <button onclick="drawMap();" id="srchBtn"><i class="fa fa-search" aria-hidden="true"></i></button> 
-            <!--<button onclick="randomColoring('TX','Hidd')">Test</button> -->
+        <div class="flex-child"><i class = "fa fa-twitter"></i></div>
+        <div class="heading flex-child">
+            <h1>America</h1>
+            <h1>Feels</h1>
+            <p>Enter a topic to know Twitter's opinions about it.</p>
+            <section class="main">
+                <div class="s">
+                    <input type="text" name="search" id="srch"/>
+                    <button onclick="drawMap();" id="srchBtn"><i class="fa fa-search" aria-hidden="true"></i></button> 
+                    <!--<button onclick="randomColoring('TX','Hidd')">Test</button> -->
+                </div>
+            </section>
         </div>
-    </section>
+    </header>
 
     <section id="select">
     </section>
@@ -51,6 +54,10 @@
         </ul>
         <img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;">
     </section>
+
+    <footer>
+        CSCE 315-506 | Team 24: Yerania Hernandez, Uyen Vo, Blake DeBenon
+    </footer>
 
 </div>
 </body>

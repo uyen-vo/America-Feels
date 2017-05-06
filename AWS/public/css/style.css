@@ -2,16 +2,17 @@ html, input {
     font-family: "Segoe UI Web Light", "Segoe UI Light", "Segoe UI Web Regular", "Segoe UI", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 }
 
-body {
-    margin: 1.5em;
-    background: white;
+body{
+	margin:0;
+	padding:0;
 }
 
-header {
-	margin: 0 100px 70px 0;
-	text-align: center;
+header{
+	display: flex;
+	margin:0 auto;
+	align-items: center;
+    justify-content: center;
 }
-
 
 c1 {
 	color: #FFFF85;
@@ -35,15 +36,39 @@ c7 {
 	color: #FF0202;
 }
 
-h1 {
-	font-size: 3.5em;
+.heading{
+	min-width:400px;
+	vertical-align: center;
+	margin-left:25px;
+}
+
+.flex-child{
+	margin-top:120px;
 }
 
 h1 {
-	margin: 0;
 	text-rendering: optimizeLegibility;
-	font-weight: normal;
-	margin-bottom:10px;
+	font-size: 3.5em;
+	font-weight: bold;
+	color:white;
+	margin:2px 0;
+	line-height: 55px;
+}
+
+#wrapper{
+	margin:0;
+	padding:0;
+	background-image: url("../images/mapbg.svg");
+	width: 100vw;
+	background-repeat: no-repeat;
+	background-size:cover;
+	height: 100vh;
+	overflow-y: hidden;
+}
+
+header p{
+	margin-top:20px;
+	color:white;
 }
 
 /* Legend */
@@ -89,19 +114,11 @@ ul {
 }
 
 /*Search*/
-
-.main{
-	text-align:center;
-	margin-bottom:50px;
-}
-
- input[type="text"] {
+input[type="text"] {
     display: inline-block;
     font-size:25px;
     border:none;
-    border-bottom: 1px solid black;
     size:20;
-    margin-right:40px;
 }
 
 .main button{
@@ -122,13 +139,11 @@ ul {
 }
 
 .main button:hover {
-	background-color: #00aced;
-	color:white;
 }
 
 
 .main button:hover > .fa-search{
-	color:white;
+	color:black;
 }
 
 #select{
@@ -136,15 +151,11 @@ ul {
 	text-align:center;
 }
 
-.s{
-	width:40%;
-	margin:0 auto;
-}
-
 /*Map*/
-.states {
-	stroke: #fff;
-	stroke-width: 1px;
+
+path {
+  stroke: white;
+  stroke-width: 1px;
 }
 
 #map{
@@ -156,6 +167,7 @@ ul {
 	opacity: 0;
 	transition: opacity 2s;
 }
+
 /* Font Awesome */
 
 @font-face {
@@ -179,7 +191,9 @@ ul {
 }
 
 .fa-twitter {
-	color: #55acee;
+	color: #fff;
+	font-size:270px;
+
 }
 
 .fa-search:before{
@@ -187,5 +201,9 @@ ul {
 }
 
 .fa-search{
-	color:black;
+	color:white;
+}
+
+footer{
+	display:none;
 }
