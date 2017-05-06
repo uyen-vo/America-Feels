@@ -22,18 +22,18 @@ server.listen(process.env.PORT || 8081);
 app.use(express.static(__dirname + '/public'));
 
 //Create web sockets connection.
-var currentstream = 0;
+// var currentstream = 0;
 io.sockets.on('connection', function (socket) {
 
   socket.on("start tweets", function(input) {
     if(stream === null) {
       //Connect to twitter stream passing in filter for entire united states.
-      // twit.stream('statuses/filter', {'locations':'-124.85, 24.39,-66.88,49.38', 'track':'#apple'}, function(stream) {
+      twit.stream('statuses/filter', {'locations':'-124.85, 24.39,-66.88,49.38'}, function(stream) {
         // twit.stream('statuses/filter', {'q':'#apple'}, function(stream) {
-        twit.stream('statuses/filter', {track: input}, function(stream) {
+        // twit.stream('statuses/filter', {track: input}, function(stream) {
           
-          if(currentstream)
-            currentstream.destroy();
+          // if(currentstream)
+          //   currentstream.destroy();
           stream.on('data', function(data) {
               // Does the JSON result have coordinates
               if (data.coordinates){
@@ -113,7 +113,7 @@ io.sockets.on('connection', function (socket) {
               stream.on('disconnect', function(disconnectMessage) {
                 return console.log(disconnectMessage);
               });
-              currentstream = stream;
+              // currentstream = stream;
           });
       });
     }

@@ -1,9 +1,12 @@
 
 	var drawOnce = 0;
+	var color;
+	var svg;
+	var input;
 	
 	function drawMap(){
 	
-	    var input = document.getElementById('srch').value;
+	    input = document.getElementById('srch').value;
 	    
 	    if(input == null || input == ""){
 	        alert("Please enter in a query.");
@@ -22,9 +25,7 @@
 	    if(drawOnce!=0){ return false; }
 	    
 	    drawOnce = 1;
-	    
-	    var color;
-	    var svg;
+	    twitterQuery(input);
 	    //Width and height
 	    var width = 960;
 	    var height = 600;
@@ -39,11 +40,11 @@
 	        .projection(projection);
 
 	    var length = 100;
-	    var color = d3.scale.linear().domain([1,length])
+	    color = d3.scale.linear().domain([1,length])
 	        .interpolate(d3.interpolateHcl)
 	        .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
 
-	    var svg = d3.select("#map")
+	    svg = d3.select("#map")
 	        .append("svg")
 	        .attr("width", width)
 	        .attr("height", height);
@@ -155,10 +156,21 @@
 		        socket.on('twitter-stream', function (data) {
 		            // analyzeTextData(data.state,data.tweet);
 		            // console.log(data);
-		            console.log(data.tweet);
-		            console.log(data.inputsocket);
-		            console.log(data.state);
-		            randomColoring(data.state,data.tweet);
+		            // console.log(data.tweet);
+		            // console.log(data.inputsocket);
+		            // console.log(data.state);
+
+
+		            var n = data.tweet.toLowerCase().search(input);
+		            if(n > -1){
+		            	console.log("CHECK: " + data.tweet);
+		            	console.log(data.state);
+		          		randomColoring(data.state,data.tweet);
+		            }
+		            // else{
+		            // 	console.log("nope: " + data.tweet);
+		            // }
+
 		        });
 
 		        // Listens for a success response from the server to 
