@@ -12,9 +12,7 @@
 	        alert("Please enter in a query.");
 	        return false;
 	    }
-		document.getElementById("select").style.opacity=0;
-        document.getElementById("map").style.opacity=0;
-        document.getElementById("legendbox").style.opacity=0;
+		document.getElementById("wrapper").style.overflowY = "visible";
 
 	    document.getElementById("select").innerHTML = "You have searched for the opinion on: <strong>" + input + ".</strong>";
 
