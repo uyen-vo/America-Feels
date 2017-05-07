@@ -3,8 +3,64 @@
 	var color;
 	var svg;
 	var searchTerm = "job";
+
+	
+	var stateInfo = [
+		{state : "AL", count : 0, totalPoints : 0, average : 0},
+		{state : "AK", count : 0, totalPoints : 0, average : 0},
+		{state : "AZ", count : 0, totalPoints : 0, average : 0},
+		{state : "AR", count : 0, totalPoints : 0, average : 0},
+		{state : "CA", count : 0, totalPoints : 0, average : 0},
+		{state : "CO", count : 0, totalPoints : 0, average : 0},
+		{state : "CT", count : 0, totalPoints : 0, average : 0},
+		{state : "DE", count : 0, totalPoints : 0, average : 0},
+		{state : "FL", count : 0, totalPoints : 0, average : 0},
+		{state : "GA", count : 0, totalPoints : 0, average : 0},
+		{state : "HI", count : 0, totalPoints : 0, average : 0},
+		{state : "ID", count : 0, totalPoints : 0, average : 0},
+		{state : "IL", count : 0, totalPoints : 0, average : 0},
+		{state : "IN", count : 0, totalPoints : 0, average : 0},
+		{state : "IA", count : 0, totalPoints : 0, average : 0},
+		{state : "KS", count : 0, totalPoints : 0, average : 0},
+		{state : "KY", count : 0, totalPoints : 0, average : 0},
+		{state : "LA", count : 0, totalPoints : 0, average : 0},
+		{state : "ME", count : 0, totalPoints : 0, average : 0},
+		{state : "MD", count : 0, totalPoints : 0, average : 0},
+		{state : "MA", count : 0, totalPoints : 0, average : 0},
+		{state : "MI", count : 0, totalPoints : 0, average : 0},
+		{state : "MN", count : 0, totalPoints : 0, average : 0},
+		{state : "MS", count : 0, totalPoints : 0, average : 0},
+		{state : "MO", count : 0, totalPoints : 0, average : 0},
+		{state : "MT", count : 0, totalPoints : 0, average : 0},
+		{state : "NE", count : 0, totalPoints : 0, average : 0},
+		{state : "NV", count : 0, totalPoints : 0, average : 0},
+		{state : "NH", count : 0, totalPoints : 0, average : 0},
+		{state : "NJ", count : 0, totalPoints : 0, average : 0},
+		{state : "NM", count : 0, totalPoints : 0, average : 0},
+		{state : "NY", count : 0, totalPoints : 0, average : 0},
+		{state : "NC", count : 0, totalPoints : 0, average : 0},
+		{state : "ND", count : 0, totalPoints : 0, average : 0},
+		{state : "OK", count : 0, totalPoints : 0, average : 0},
+		{state : "OH", count : 0, totalPoints : 0, average : 0},
+		{state : "OR", count : 0, totalPoints : 0, average : 0},
+		{state : "PA", count : 0, totalPoints : 0, average : 0},
+		{state : "RI", count : 0, totalPoints : 0, average : 0},
+		{state : "SC", count : 0, totalPoints : 0, average : 0},
+		{state : "SD", count : 0, totalPoints : 0, average : 0},
+		{state : "TN", count : 0, totalPoints : 0, average : 0},
+		{state : "TX", count : 0, totalPoints : 0, average : 0},
+		{state : "UT", count : 0, totalPoints : 0, average : 0},
+		{state : "VT", count : 0, totalPoints : 0, average : 0},
+		{state : "VA", count : 0, totalPoints : 0, average : 0},
+		{state : "WA", count : 0, totalPoints : 0, average : 0},
+		{state : "WV", count : 0, totalPoints : 0, average : 0},
+		{state : "WI", count : 0, totalPoints : 0, average : 0},
+		{state : "WY", count : 0, totalPoints : 0, average : 0}
+	];
+
 	
 	function input(){
+		resetMap();
 		searchTerm = document.getElementById('srch').value;
 	    
 	    if(searchTerm == null || searchTerm == ""){
@@ -12,6 +68,15 @@
 	        return false;
 	    }
 	    drawMap();
+	}
+
+	function resetMap(){
+		d3.json("json/us-states.json", function(json) {
+	            svg.selectAll("path")
+	            .style("fill", function() {
+	                return "#ccc";
+	            });
+	        });
 	}
 
 	function drawMap(){
@@ -41,7 +106,7 @@
 	    var length = 100;
 	    color = d3.scale.linear().domain([1,length])
 	        .interpolate(d3.interpolateHcl)
-	        .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
+	        .range([d3.rgb("#ed3b3b"), d3.rgb("#3bed94")]);
 
 	    svg = d3.select("#map")
 	        .append("svg")
@@ -66,6 +131,26 @@
 	                    return "#ccc";
 	                }
 	            });
+
+	            svg.selectAll("path")
+			    .data(json.features)
+			    .enter()
+			    .append("text")
+			    .text(function(d){
+			        for (var i=0; i < stateInfo.length; i++) {
+	       				if (stateInfo[i].state === d.properties.name){
+	       					return stateInfo[i].average;
+	       				}
+	       			}
+			    })
+			    .attr("x", function(d){
+			        return path.centroid(d)[0];
+			    })
+			    .attr("y", function(d){
+			        return  path.centroid(d)[1];
+			    })
+			    .attr("text-anchor","middle")
+			    .attr('font-size','6pt');
 	        });
 
 	}
@@ -141,6 +226,19 @@
 
 	function randomColoring(state, tweet){
 	    var scoreValue = getRandomArbitrary(0,100);
+	    for (var i=0; i < stateInfo.length; i++) {
+	        if (stateInfo[i].state === state) {
+	            stateInfo[i].totalPoints+=scoreValue;
+	            stateInfo[i].count++;
+	            if(stateInfo[i].totalPoints!= 0 && stateInfo[i].count != 0){
+		            stateInfo[i].average = stateInfo[i].totalPoints/stateInfo[i].count;
+		        }
+
+		        scoreValue = stateInfo[i].average;
+		        break; 
+	        }
+	    }
+
 	    changeColor(state, scoreValue);
 	}
 
