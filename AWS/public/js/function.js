@@ -60,7 +60,7 @@
 
 	
 	function input(){
-		resetMap();
+		reset();
 		searchTerm = document.getElementById('srch').value;
 	    
 	    if(searchTerm == null || searchTerm == ""){
@@ -70,13 +70,19 @@
 	    drawMap();
 	}
 
-	function resetMap(){
+	function reset(){
 		d3.json("json/us-states.json", function(json) {
 	            svg.selectAll("path")
 	            .style("fill", function() {
 	                return "#ccc";
 	            });
 	        });
+
+		for (var i=0; i < stateInfo.length; i++) {
+	        stateInfo[i].count = 0;
+	        stateInfo[i].totalPoints = 0;
+	        stateInfo[i].average = 0;
+	    }
 	}
 
 	function drawMap(){
@@ -106,7 +112,7 @@
 	    var length = 100;
 	    color = d3.scale.linear().domain([1,length])
 	        .interpolate(d3.interpolateHcl)
-	        .range([d3.rgb("#ed3b3b"), d3.rgb("#3bed94")]);
+	        .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
 
 	    svg = d3.select("#map")
 	        .append("svg")
