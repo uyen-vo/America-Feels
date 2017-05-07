@@ -10,8 +10,8 @@ var twitter = require('twitter'),
 var twit = new twitter({
   consumer_key: 'iimPJJrdko91XqX7ti3NDnNfm',
   consumer_secret: 'RtU6DFsQfI1w4qczwarxzXHhBNBQtyxGt4LPuLtWL3Eof0V6Iv',
-  access_token_key: '855837735877267457-cxkram2XcWiklz0WjVqehhoXxWzynCP',
-  access_token_secret: 'Yo3RwxfEDFPWAtSKNhPbctFjZlB1v8PElsg7JE0pb3OXb'
+  access_token_key: '855837735877267457-HxHtvWdGbeKYovzG7sLLnEt35mEv0un',
+  access_token_secret: 'iulYpXq8gzNRV0f2ysez5OjazIU1cSOd9S6sYTzOJM8rt'
 }),
 stream = null;
 
@@ -22,25 +22,18 @@ server.listen(process.env.PORT || 8081);
 app.use(express.static(__dirname + '/public'));
 
 //Create web sockets connection.
-// var currentstream = 0;
 io.sockets.on('connection', function (socket) {
 
-  socket.on("start tweets", function(input) {
+  socket.on("start tweets", function() {
     if(stream === null) {
       //Connect to twitter stream passing in filter for entire united states.
       twit.stream('statuses/filter', {'locations':'-124.85, 24.39,-66.88,49.38'}, function(stream) {
-        // twit.stream('statuses/filter', {'q':'#apple'}, function(stream) {
-        // twit.stream('statuses/filter', {track: input}, function(stream) {
-          
-          // if(currentstream)
-          //   currentstream.destroy();
           stream.on('data', function(data) {
               // Does the JSON result have coordinates
               if (data.coordinates){
                 var outputPoint = {};
                 if (data.coordinates !== null){
                   //If so then build up some nice json and send out to web sockets
-                  //var outputPoint = {"lat": data.coordinates.coordinates[0],"lng": data.coordinates.coordinates[1]};
                   outputPoint.lat = data.coordinates.coordinates[0];
                   outputPoint.lng = data.coordinates.coordinates[1];
                   var city = data.place.full_name;
@@ -57,12 +50,13 @@ io.sockets.on('connection', function (socket) {
                   var d = date.toDateString().substr(4);
                   var t = (date.getHours() > 12) ? date.getHours()-12 + ':' + date.getMinutes() + ' PM' : date.getHours() + ':' + date.getMinutes() +' AM;';
                   outputPoint.timestamp = t + ' - ' + d;
-                  outputPoint.inputsocket = input;
+                  // outputPoint.inputsocket = input;
 
                   socket.broadcast.emit("twitter-stream", outputPoint);
 
                   //Send out to web sockets channel.
                   socket.emit('twitter-stream', outputPoint);
+
                 }
                 else if(data.place){
                   if(data.place.bounding_box === 'Polygon'){
@@ -98,6 +92,9 @@ io.sockets.on('connection', function (socket) {
                     outputPoint.timestamp = t + ' - ' + d;
 
                     socket.broadcast.emit("twitter-stream", outputPoint);
+                    
+                    //Send out to web sockets channel.
+                    socket.emit('twitter-stream', outputPoint);
 
                   }
                 }
@@ -113,7 +110,6 @@ io.sockets.on('connection', function (socket) {
               stream.on('disconnect', function(disconnectMessage) {
                 return console.log(disconnectMessage);
               });
-              // currentstream = stream;
           });
       });
     }

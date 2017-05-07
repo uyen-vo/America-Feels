@@ -1,21 +1,22 @@
 
-	var drawOnce = 0;
+	var drawOnce=0;
 	var color;
 	var svg;
-	var input;
+	var searchTerm = "job";
 	
-	function drawMap(){
-	
-	    input = document.getElementById('srch').value;
+	function input(){
+		searchTerm = document.getElementById('srch').value;
 	    
-	    if(input == null || input == ""){
+	    if(searchTerm == null || searchTerm == ""){
 	        alert("Please enter in a query.");
 	        return false;
 	    }
+	    drawMap();
+	}
+
+	function drawMap(){
 		document.getElementById("wrapper").style.overflowY = "visible";
-
-	    document.getElementById("select").innerHTML = "You have searched for the opinion on: <strong>" + input + ".</strong>";
-
+	    document.getElementById("select").innerHTML = "You have searched for the opinion on: <strong>" + searchTerm + ".</strong>";
         document.getElementById("select").style.opacity=1;
         document.getElementById("map").style.opacity=1;
 	    document.getElementById("legendbox").style.opacity=1;
@@ -23,7 +24,7 @@
 	    if(drawOnce!=0){ return false; }
 	    
 	    drawOnce = 1;
-	    twitterQuery(input);
+	    // twitterQuery(searchTerm);
 	    //Width and height
 	    var width = 960;
 	    var height = 600;
@@ -143,43 +144,39 @@
 	    changeColor(state, scoreValue);
 	}
 
-	function twitterQuery(search){
-		console.log("twitter query");
-		if(io !== undefined) {
-		        // Storage for WebSocket connections
-		        var socket = io.connect('/');
+	if(io !== undefined) {
+        // Storage for WebSocket connections
+        var socket = io.connect('/');
 
-		        // This listens on the "twitter-steam" channel and data is 
-		        // received everytime a new tweet is receieved.
-		        socket.on('twitter-stream', function (data) {
-		            // analyzeTextData(data.state,data.tweet);
-		            // console.log(data);
-		            // console.log(data.tweet);
-		            // console.log(data.inputsocket);
-		            // console.log(data.state);
+        // This listens on the "twitter-steam" channel and data is 
+        // received everytime a new tweet is receieved.
+        socket.on('twitter-stream', function (data) {
+            // analyzeTextData(data.state,data.tweet);
+            twitterQuery(data.tweet, data.state);
+        });
 
+        // Listens for a success response from the server to 
+        // say the connection was successful.
+        socket.on("connected", function(r) {
 
-		            var n = data.tweet.toLowerCase().search(input);
-		            if(n > -1){
-		            	console.log("CHECK: " + data.tweet);
-		            	console.log(data.state);
-		          		randomColoring(data.state,data.tweet);
-		            }
-		            // else{
-		            // 	console.log("nope: " + data.tweet);
-		            // }
+          //Now that we are connected to the server let's tell 
+          //the server we are ready to start receiving tweets.
+          socket.emit("start tweets");
+        });
+	}
 
-		        });
-
-		        // Listens for a success response from the server to 
-		        // say the connection was successful.
-		        socket.on("connected", function(r) {
-
-		          //Now that we are connected to the server let's tell 
-		          //the server we are ready to start receiving tweets.
-		          socket.emit("start tweets", search);
-		        });
-		}
+	function twitterQuery(tweet, state){
+		// console.log("twitter query");
+		console.log(searchTerm);
+		var n = tweet.toLowerCase().search(searchTerm);
+            if(n > -1){
+            	console.log("CHECK: " + tweet);
+            	console.log(state);
+          		randomColoring(state,tweet);
+            }
+           	else{
+            	console.log("nope: " + tweet);
+            }
 	}
 window.onload=function(){
 	document.getElementById("srch").addEventListener("keyup", function(event) {
