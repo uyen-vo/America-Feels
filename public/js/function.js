@@ -4,7 +4,6 @@
 	var svg;
 	var searchTerm = "job";
 
-	
 	var stateInfo = [
 		{state : "AL", count : 0, totalPoints : 0, average : 0},
 		{state : "AK", count : 0, totalPoints : 0, average : 0},
