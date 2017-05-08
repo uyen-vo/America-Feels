@@ -1,7 +1,7 @@
 	var drawOnce=0;
 	var color;
 	var svg;
-	var searchTerm = "";
+	var searchTerm = "job";
 
 	var stateInfo = [
 		{state : "AL", count : 0, totalPoints : 0, average : 0},
@@ -249,7 +249,7 @@
         // This listens on the "twitter-stream" channel and data is received everytime a new tweet is receieved.
         socket.on('twitter-stream', function (data) {
         	//Analyze if specific tweet contains the keyword
-            twitterQuery(data.tweet, data.state);
+            twitterQuery(data.state, data.tweet);
         });
         // Listens for a success response from the server to say the connection was successful.
         socket.on("connected", function(r) {
