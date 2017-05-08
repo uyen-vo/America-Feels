@@ -1,8 +1,7 @@
-
 	var drawOnce=0;
 	var color;
 	var svg;
-	var searchTerm = "job";
+	var searchTerm = "";
 
 	var stateInfo = [
 		{state : "AL", count : 0, totalPoints : 0, average : 0},
@@ -57,7 +56,7 @@
 		{state : "WY", count : 0, totalPoints : 0, average : 0}
 	];
 
-	
+	//When a new keyword is beign searched, clear the map and the averages for the each state
 	function input(){
 		reset();
 		searchTerm = document.getElementById('srch').value;
@@ -69,6 +68,7 @@
 	    drawMap();
 	}
 
+	//The map should be recolored to its original state once it starts a new keyword along with starting it's total averages at 0 again.
 	function reset(){
 		d3.json("json/us-states.json", function(json) {
 	            svg.selectAll("path")
@@ -84,6 +84,7 @@
 	    }
 	}
 
+	//Draw the JSON file using the D3.js API and later using it to color the state necessary once analyzed for emotions
 	function drawMap(){
 		document.getElementById("wrapper").style.overflowY = "visible";
 	    document.getElementById("select").innerHTML = "You have searched for the opinion on: <strong>" + searchTerm + ".</strong>";
@@ -160,16 +161,15 @@
 
 	}
 
+	//Change the color of the state if a tweet was found with the respective state location
 	function changeColor(state, value) {
 	    var condition;
 	    condition = color(value);
 	    console.log(condition);
 	    svg.selectAll("path")
 	        .style("fill", function(d){
-	            //console.log(d.proprties.name.toString());
-	            // var stateName = d.properties["name"];
 	            var stateName = d.properties["STATE_ABBR"];
-	            // console.log(state);
+	          
 	            if(stateName === state) {
 	                return condition;
 	            }
@@ -183,6 +183,7 @@
 	    return Math.floor(Math.random() * (max - min)) + min;
 	}
 
+	//Analyze the tweet using Microsoft Congnitve API in order to find the appropriate value and change its color based on this value
 	var requestHolder;
 	function analyzeTextData(state, tweet) {
 	    var data = generateJSON(tweet);
@@ -205,6 +206,7 @@
 	        }
 	    }
 	}
+
 	function generateJSON(tweet) {
 	    var jsonObject =
 	        {
@@ -218,15 +220,6 @@
 	        };
 	    var json = JSON.stringify(jsonObject);
 	    return json;
-	}
-
-	function getRandomColor() {
-	    var letters = '0123456789ABCDEF';
-	    var color = '#';
-	    for (var i = 0; i < 6; i++ ) {
-	        color += letters[Math.floor(Math.random() * 16)];
-	    }
-	    return color;
 	}
 
 	function randomColoring(state, tweet){
@@ -247,40 +240,43 @@
 	    changeColor(state, scoreValue);
 	}
 
+	//Begin the streaming without being called and filter out all locations by United States. 
+	//Call on twitterQuery to analyze the text for the specific keyword
 	if(io !== undefined) {
         // Storage for WebSocket connections
         var socket = io.connect('/');
 
-        // This listens on the "twitter-steam" channel and data is 
-        // received everytime a new tweet is receieved.
+        // This listens on the "twitter-stream" channel and data is received everytime a new tweet is receieved.
         socket.on('twitter-stream', function (data) {
-            // analyzeTextData(data.state,data.tweet);
+        	//Analyze if specific tweet contains the keyword
             twitterQuery(data.tweet, data.state);
         });
-
-        // Listens for a success response from the server to 
-        // say the connection was successful.
+        // Listens for a success response from the server to say the connection was successful.
         socket.on("connected", function(r) {
-
-          //Now that we are connected to the server let's tell 
-          //the server we are ready to start receiving tweets.
+          //Tell server we are ready to start receiving tweets.
           socket.emit("start tweets");
         });
 	}
 
-	function twitterQuery(tweet, state){
+	//Analyze if specific keyword can be found in tweet and if it is found, then analyze the tweet for an emotion
+	function twitterQuery(state, tweet){
 		// console.log("twitter query");
 		console.log(searchTerm);
 		var n = tweet.toLowerCase().search(searchTerm);
-            if(n > -1){
-            	console.log("CHECK: " + tweet);
-            	console.log(state);
-          		randomColoring(state,tweet);
-            }
-           	else{
-            	console.log("nope: " + tweet);
-            }
+        
+        //If keyword found, analyze the text for emotion
+        if(n > -1){
+        	console.log("VERIFY: " + tweet);
+        	console.log(state);
+      		randomColoring(state,tweet);
+      		// analyzeTextData(state,tweet);
+        }
+        //If keyword not found, output the result in order to check streaming along with if it is false
+       	else{
+        	console.log("FALSE: " + tweet);
+        }
 	}
+
 window.onload=function(){
 	document.getElementById("srch").addEventListener("keyup", function(event) {
 	    event.preventDefault();

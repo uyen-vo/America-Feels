@@ -33,7 +33,7 @@ io.sockets.on('connection', function (socket) {
               if (data.coordinates){
                 var outputPoint = {};
                 if (data.coordinates !== null){
-                  //If so then build up some nice json and send out to web sockets
+                  //Build json and send out to web sockets
                   outputPoint.lat = data.coordinates.coordinates[0];
                   outputPoint.lng = data.coordinates.coordinates[1];
                   var city = data.place.full_name;
@@ -50,7 +50,6 @@ io.sockets.on('connection', function (socket) {
                   var d = date.toDateString().substr(4);
                   var t = (date.getHours() > 12) ? date.getHours()-12 + ':' + date.getMinutes() + ' PM' : date.getHours() + ':' + date.getMinutes() +' AM;';
                   outputPoint.timestamp = t + ' - ' + d;
-                  // outputPoint.inputsocket = input;
 
                   socket.broadcast.emit("twitter-stream", outputPoint);
 
