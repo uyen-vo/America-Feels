@@ -20,17 +20,22 @@
     <script src="https://d3js.org/topojson.v2.min.js"></script>
     <script src="js/function.js"></script>
 </head>
+<style>
+    .states :hover {
+    fill: "#0666a5";;
+    }
+</style>
 
 <body>
 <div id = "wrapper">
-    <header>
+    <header id="head">
         <div class="flex-child"><i class = "fa fa-twitter"></i></div>
         <div class="heading flex-child">
             <h1>America</h1>
             <h1>Feels</h1>
             <p>Enter a topic to know Twitter's opinions about it.</p>
             <section class="main">
-                <div class="s">
+                <div>
                     <input type="text" name="search" id="srch"/>
                     <button onclick="input();" id="srchBtn"><i class="fa fa-search" aria-hidden="true"></i></button> 
                     <!--<button onclick="randomColoring('TX','Hidd')">Test</button> -->
@@ -38,22 +43,44 @@
             </section>
         </div>
     </header>
+    <div id="flex-container">
+        <div class="flex-item">
+            <div id="head2">
+                <div class ="logo"><a href="index.html"><img id="smlogo" src="images/logo.svg" onmouseover="this.src='images/logo2.svg';"
+         onmouseout="this.src='images/logo.svg';"></a></div>
+                <div class="s">
+                    <input type="text" name="search" id="srch2"/>
+                    <button onclick="input();" id="srchBtn2"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+                <section id="select">
 
-    <section id="select">
-    </section>
+                </section>
 
-    <section id="map">
-    </section>
+                <section id="info">
+                    <p><strong>America Feels</strong> is an application that visually displays how America Feels about a topic based on the Tweets people post.</p>
 
-    <section id="legendbox">
-        <p id="select"></p>
-        <ul>
-            <li><div class="happy"></div>Positive tweets</li>
-            <li><div class="neutral"></div>Equal number of positive and negative tweets</li>
-            <li><div class="sad"></div>Negative tweets</li>
-        </ul>
-        <img src="images/colorSpectrum.png" alt="Color Key" style="width:450px;height:50px;">
-    </section>
+                    <p>To view the source code, please check out our <a href="https://github.com/AmericaFeels/AmericaFeels.github.io">GitHub repo.</a></p>
+                </section>
+                
+            </div>
+        </div>
+        <div class="flex-item2">
+
+            <section id="map">
+            </section>
+
+            <section id="legendbox">
+                
+                <img src="images/colorSpectrum.svg" alt="Color Key" style="width:450px;height:50px;">
+                <ul>
+                    <li><div class="happy"></div>Positive tweets</li>
+                    <li><div class="neutral"></div>Equal number of positive/negative tweets</li>
+                    <li><div class="sad"></div>Negative tweets</li>
+                </ul>
+            </section>
+        </div>
+
+    </div>
 
     <footer>
         CSCE 315-506 | Team 24: Yerania Hernandez, Uyen Vo, Blake DeBenon

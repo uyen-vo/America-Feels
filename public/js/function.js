@@ -1,7 +1,12 @@
 	var drawOnce=0;
 	var color;
 	var svg;
+    var centered;
+    var path;
+    var width;
+    var height;
 	var searchTerm = "job";
+	var loaded=0;
 
 	var stateInfo = [
 		{state : "AL", count : 0, totalPoints : 0, average : 0},
@@ -59,13 +64,32 @@
 	//When a new keyword is beign searched, clear the map and the averages for the each state
 	function input(){
 		reset();
-		searchTerm = document.getElementById('srch').value;
+		if(loaded == 0){
+			searchTerm = document.getElementById('srch').value;
+		}
+		else{
+			searchTerm = document.getElementById('srch2').value;
+		}
 	    
 	    if(searchTerm == null || searchTerm == ""){
 	        alert("Please enter in a query.");
 	        return false;
 	    }
+
+	    loadPage();
+
 	    drawMap();
+	}
+
+	//Loads the information page after a query
+	function loadPage(){
+		document.getElementById("wrapper").setAttribute('style', 'background:url(images/mapbg2.svg) no-repeat !important');
+	    document.getElementById("wrapper").style.backgroundSize = "cover";
+	    document.getElementById("head").style.display = "none";
+	    document.getElementById("srch2").style.opacity = 1;
+	    document.getElementById("smlogo").style.opacity = 1;
+	    document.getElementById("info").style.opacity = 1;
+	    loaded=1;
 	}
 
 	//The map should be recolored to its original state once it starts a new keyword along with starting it's total averages at 0 again.
@@ -73,7 +97,7 @@
 		d3.json("json/us-states.json", function(json) {
 	            svg.selectAll("path")
 	            .style("fill", function() {
-	                return "#ccc";
+	                return "#3FA9F5";
 	            });
 	        });
 
@@ -84,10 +108,17 @@
 	    }
 	}
 
+	function COLOR(value) {
+        var length = 100;
+		var colorate = d3.scale.linear().domain([1,length])
+            .interpolate(d3.interpolateHcl)
+	        .range([d3.rgb("#f5001f"), d3.rgb('#f2f500')]);
+        return colorate(value);
+	}
 	//Draw the JSON file using the D3.js API and later using it to color the state necessary once analyzed for emotions
 	function drawMap(){
-		document.getElementById("wrapper").style.overflowY = "visible";
-	    document.getElementById("select").innerHTML = "You have searched for the opinion on: <strong>" + searchTerm + ".</strong>";
+		//document.getElementById("wrapper").style.overflowY = "visible";
+	    document.getElementById("select").innerHTML = "Displaying how America feels about: <strong>" + searchTerm + ".</strong>";
         document.getElementById("select").style.opacity=1;
         document.getElementById("map").style.opacity=1;
 	    document.getElementById("legendbox").style.opacity=1;
@@ -97,8 +128,9 @@
 	    drawOnce = 1;
 	    // twitterQuery(searchTerm);
 	    //Width and height
-	    var width = 960;
-	    var height = 600;
+	    width = 900;
+	    height = 600;
+
 
 	    //Map Projection
 	    var projection = d3.geo.albersUsa()
@@ -106,14 +138,14 @@
 	        .scale([1000]);
 
 	    //Path Generator
-	    var path = d3.geo.path()
+	    path = d3.geo.path()
 	        .projection(projection);
 
 	    var length = 100;
 	    color = d3.scale.linear().domain([1,length])
 	        .interpolate(d3.interpolateHcl)
-	        .range([d3.rgb("#FC0300"), d3.rgb('#FFF900')]);
-
+	        .range([d3.rgb("#db36a4"), d3.rgb('#f7ff00')]);
+	        
 	    svg = d3.select("#map")
 	        .append("svg")
 	        .attr("width", width)
@@ -125,17 +157,11 @@
 	            .enter()
 	            .append("path")
 	            .attr("d", path)
+				.on('mouseover', mouseover)
+				.on('mouseout', mouseout)
+				.on('click', clicked)
 	            .style("fill", function(d) {
-	                // Get data value
-	                var value = d.properties.value;
-
-	                if (value) {
-	                    //If value exists…
-	                    return "#0666a5";
-	                } else {
-	                    //If value is undefined…
-	                    return "#ccc";
-	                }
+					return "#3FA9F5";
 	            });
 
 	            svg.selectAll("path")
@@ -160,11 +186,102 @@
 	        });
 
 	}
+    function clicked(d) {
+        var x, y, k;
+
+        // Compute centroid of the selected path
+        if (d && centered !== d) {
+            var stateName = d.properties["STATE_ABBR"];
+            var scoreValue;
+            for (var i=0; i < stateInfo.length; i++) {
+                if (stateInfo[i].state === stateName) {
+					scoreValue = stateInfo[i].average;
+					console.log(scoreValue);
+					break;
+                }
+            }
+            var centroid = path.centroid(d);
+            x = centroid[0] - width/2 + 105;
+            y = centroid[1] - height/2 + 60;
+            var myText =  svg.selectAll('path').append("text")
+                .attr("y", y)
+                .attr("x", x)
+                .attr("fill", "black")
+                .text('TESTING');
+                //.text(stateName + ': ' + scoreValue);
+
+            k = 1;
+            centered = d;
+        } else {
+            x = width / 2;
+            y = height / 2;
+            k = 1;
+            centered = null;
+        }
+
+        // Highlight the clicked province
+        svg.selectAll('path')
+            .style('fill', function(d){return centered && d===centered ? '#2609d5' : function() {
+                for (var i=0; i < stateInfo.length; i++) {
+                    if (stateInfo[i].state === state) {
+                        console.log(stateInfo[i].count);
+                        if(stateInfo[i].count <= 0) {
+                            return "#3FA9F5";
+                        } else {
+                            scoreValue = stateInfo[i].average;
+                            console.log(scoreValue);
+                            return COLOR(scoreValue);
+                        }
+                    }
+                }
+            }});
+
+        // Zoom
+        //svg.transition()
+        //    .duration(750)
+        //    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
+    }
+    function mouseover(d){
+        // Highlight hovered province
+        d3.select(this).style('fill', 'white');
+
+        // Draw effects
+        //textArt(nameFn(d));``
+    }
+    function mouseout(d){
+    	var scoreValue;
+    	var state = d.properties["STATE_ABBR"];
+        d3.select(this).style('fill', function() {
+            for (var i=0; i < stateInfo.length; i++) {
+                if (stateInfo[i].state === state) {
+                	console.log(stateInfo[i].count);
+                	if(stateInfo[i].count <= 0) {
+                		return "#3FA9F5";
+					} else {
+                        scoreValue = stateInfo[i].average;
+                        console.log(scoreValue);
+                        return COLOR(scoreValue);
+                    }
+                }
+            }
+		});
+        // Reset province color
+        /*mapLayer.selectAll('path')
+            .style('fill', function(d){return centered && d===centered ? '#D5708B' : fillFn(d);});
+
+        // Remove effect text
+        effectLayer.selectAll('text').transition()
+            .style('opacity', 0)
+            .remove();
+
+        // Clear province name
+        bigText.text('');*/
+    }
 
 	//Change the color of the state if a tweet was found with the respective state location
 	function changeColor(state, value) {
 	    var condition;
-	    condition = color(value);
+	    condition = COLOR(value);
 	    console.log(condition);
 	    svg.selectAll("path")
 	        .style("fill", function(d){
@@ -177,6 +294,12 @@
 	                return "#06666a5";
 	            }
 	        });
+	}
+
+	function randomlyColorStates() {
+		for(var i = 0; i < stateInfo.length; ++i) {
+			changeColor(stateInfo[i]['state'], getRandomArbitrary(0,100));
+		}
 	}
 
 	function getRandomArbitrary(min, max) {
@@ -197,12 +320,24 @@
 	    request.onreadystatechange = function () {
 	        if (request.readyState == XMLHttpRequest.DONE) {
 	            var r1 = request.responseText;
-	    var results = JSON.parse(r1);
+	    		var results = JSON.parse(r1);
 	            // console.log(results);
 	            var score = results["documents"][0]["score"];
 	            var scoreValue = score*100;
-	            console.log(scoreValue);
-	            changeColor(state, scoreValue);
+                for (var i=0; i < stateInfo.length; i++) {
+                    if (stateInfo[i].state === state) {
+                        stateInfo[i].totalPoints+=scoreValue;
+                        stateInfo[i].count++;
+                        if(stateInfo[i].totalPoints!= 0 && stateInfo[i].count != 0){
+                            stateInfo[i].average = stateInfo[i].totalPoints/stateInfo[i].count;
+                        }
+
+                        scoreValue = stateInfo[i].average;
+                        break;
+                    }
+                }
+
+                changeColor(state, scoreValue);
 	        }
 	    }
 	}
@@ -268,8 +403,8 @@
         if(n > -1){
         	console.log("VERIFY: " + tweet);
         	console.log(state);
+            //analyzeTextData(state, tweet);
       		randomColoring(state,tweet);
-      		// analyzeTextData(state,tweet);
         }
         //If keyword not found, output the result in order to check streaming along with if it is false
        	else{
@@ -279,6 +414,13 @@
 
 window.onload=function(){
 	document.getElementById("srch").addEventListener("keyup", function(event) {
+	    event.preventDefault();
+	    if (event.keyCode == 13) {
+	        document.getElementById("srchBtn").click();
+	    }
+	});
+
+	document.getElementById("srch2").addEventListener("keyup", function(event) {
 	    event.preventDefault();
 	    if (event.keyCode == 13) {
 	        document.getElementById("srchBtn").click();
