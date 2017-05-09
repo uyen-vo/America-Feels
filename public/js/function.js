@@ -7,6 +7,7 @@
     var height;
 	var searchTerm = "job";
 	var loaded=0;
+	var maxTweets = 0;
 
 	var stateInfo = [
 		{state : "AL", count : 0, totalPoints : 0, average : 0},
@@ -112,7 +113,7 @@
         var length = 100;
 		var colorate = d3.scale.linear().domain([1,length])
             .interpolate(d3.interpolateHcl)
-	        .range([d3.rgb("#f5001f"), d3.rgb('#f2f500')]);
+	        .range([d3.rgb("#db36a4"), d3.rgb('#f7ff00')]);
         return colorate(value);
 	}
 	//Draw the JSON file using the D3.js API and later using it to color the state necessary once analyzed for emotions
@@ -159,7 +160,7 @@
 	            .attr("d", path)
 				.on('mouseover', mouseover)
 				.on('mouseout', mouseout)
-				.on('click', clicked)
+				//.on('click', clicked)
 	            .style("fill", function(d) {
 					return "#3FA9F5";
 	            });
@@ -186,7 +187,7 @@
 	        });
 
 	}
-    function clicked(d) {
+    /*function clicked(d) {
         var x, y, k;
 
         // Compute centroid of the selected path
@@ -196,7 +197,7 @@
             for (var i=0; i < stateInfo.length; i++) {
                 if (stateInfo[i].state === stateName) {
 					scoreValue = stateInfo[i].average;
-					console.log(scoreValue);
+					//console.log(scoreValue);
 					break;
                 }
             }
@@ -240,7 +241,7 @@
         //svg.transition()
         //    .duration(750)
         //    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
-    }
+    }*/
     function mouseover(d){
         // Highlight hovered province
         d3.select(this).style('fill', 'white');
@@ -254,12 +255,12 @@
         d3.select(this).style('fill', function() {
             for (var i=0; i < stateInfo.length; i++) {
                 if (stateInfo[i].state === state) {
-                	console.log(stateInfo[i].count);
+                	//console.log(stateInfo[i].count);
                 	if(stateInfo[i].count <= 0) {
                 		return "#3FA9F5";
 					} else {
                         scoreValue = stateInfo[i].average;
-                        console.log(scoreValue);
+                        //console.log(scoreValue);
                         return COLOR(scoreValue);
                     }
                 }
@@ -282,7 +283,7 @@
 	function changeColor(state, value) {
 	    var condition;
 	    condition = COLOR(value);
-	    console.log(condition);
+	    //console.log(condition);
 	    svg.selectAll("path")
 	        .style("fill", function(d){
 	            var stateName = d.properties["STATE_ABBR"];
@@ -310,36 +311,39 @@
 	var requestHolder;
 	function analyzeTextData(state, tweet) {
 	    var data = generateJSON(tweet);
-	    //console.log(data);
+	    console.log(tweet);
 	    var request = new XMLHttpRequest();
-	    request.open('POST', 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment');
-	    request.setRequestHeader('Ocp-Apim-Subscription-Key', 'fd98ecfa17ca4b439fcf66166864b049');
-	    request.setRequestHeader('Content-Type', 'application/json');
-	    request.setRequestHeader('Accept', 'application/json');
-	    request.send(data);
-	    request.onreadystatechange = function () {
-	        if (request.readyState == XMLHttpRequest.DONE) {
-	            var r1 = request.responseText;
-	    		var results = JSON.parse(r1);
-	            // console.log(results);
-	            var score = results["documents"][0]["score"];
-	            var scoreValue = score*100;
-                for (var i=0; i < stateInfo.length; i++) {
-                    if (stateInfo[i].state === state) {
-                        stateInfo[i].totalPoints+=scoreValue;
-                        stateInfo[i].count++;
-                        if(stateInfo[i].totalPoints!= 0 && stateInfo[i].count != 0){
-                            stateInfo[i].average = stateInfo[i].totalPoints/stateInfo[i].count;
+	    if(maxTweets < 75) {
+            ++maxTweets;
+            request.open('POST', 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment');
+            request.setRequestHeader('Ocp-Apim-Subscription-Key', 'fd98ecfa17ca4b439fcf66166864b049');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.setRequestHeader('Accept', 'application/json');
+            request.send(data);
+            request.onreadystatechange = function () {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    var r1 = request.responseText;
+                    var results = JSON.parse(r1);
+                    // console.log(results);
+                    var score = results["documents"][0]["score"];
+                    var scoreValue = score * 100;
+                    for (var i = 0; i < stateInfo.length; i++) {
+                        if (stateInfo[i].state === state) {
+                            stateInfo[i].totalPoints += scoreValue;
+                            stateInfo[i].count++;
+                            if (stateInfo[i].totalPoints != 0 && stateInfo[i].count != 0) {
+                                stateInfo[i].average = stateInfo[i].totalPoints / stateInfo[i].count;
+                            }
+
+                            scoreValue = stateInfo[i].average;
+                            break;
                         }
-
-                        scoreValue = stateInfo[i].average;
-                        break;
                     }
-                }
 
-                changeColor(state, scoreValue);
-	        }
-	    }
+                    changeColor(state, scoreValue);
+                }
+            }
+        }
 	}
 
 	function generateJSON(tweet) {
@@ -402,9 +406,9 @@
         //If keyword found, analyze the text for emotion
         if(n > -1){
         	console.log("VERIFY: " + tweet);
-        	console.log(state);
-            //analyzeTextData(state, tweet);
-      		randomColoring(state,tweet);
+        	//console.log(state);
+            analyzeTextData(state, tweet);
+      		//randomColoring(state,tweet);
         }
         //If keyword not found, output the result in order to check streaming along with if it is false
        	else{
