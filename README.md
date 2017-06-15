@@ -3,7 +3,7 @@ America Feels
 
 The purpose of this application is to visually display how America feels about a topic based on the Tweets people post. This will be done through a visual of the United States, each state displaying a color corresponding to the amount negative/positive Tweets it has, and a search bar to allow for users to search for a specific topic.
 
-The web services we used are the d3.js to dynamically display the data for our map, the Twitter Stream API to pull information on people's opinions live, and the Microsoft Cognitive API to analyze the tweet for a certain emotion and be able to color define it. A live demo of our site is available: <a href = "http://lowcost-env.ab7a25j9zc.us-east-1.elasticbeanstalk.com/" target="_blank">here</a>. 
+The web services we used are the d3.js to dynamically display the data for our map, the Twitter Stream API to pull information on people's opinions live, and the Microsoft Cognitive API to analyze the tweet for a certain emotion and be able to color define it. 
 
 We have also provided instructions on how to deploy the applciation on AWS Elastic Beanstalk.
 
